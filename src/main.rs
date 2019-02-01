@@ -3,6 +3,7 @@ use structopt::StructOpt;
 #[macro_use]
 extern crate clap;
 // local module definition
+mod go;
 mod identify;
 mod node;
 
@@ -19,7 +20,7 @@ fn main() {
     let args = BumpCli::from_args();
 
     // grab package manager for the current project
-    match identify::identify_project() {
+    match identify::identify_project("".to_string(), filesystem::OsFileSystem::new()) {
         Err(msg) => println!("Encountered error: {}", msg),
         Ok(mgr) => {
             println!("Identified project as {}", mgr.language_name());

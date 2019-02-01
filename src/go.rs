@@ -1,9 +1,9 @@
-// node::PackageManager knows how to bump node packages
+// go::PackageManager knows how to bump go packages
 pub struct PackageManager;
 
 impl super::PackageManager for PackageManager {
     fn language_name(&self) -> String {
-        "Node".to_string()
+        "Go".to_string()
     }
     fn major(&self) {}
     fn minor(&self) {}
