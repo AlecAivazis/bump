@@ -27,8 +27,8 @@ fn main() {
             match identify::identify_project(cwd, filesystem::OsFileSystem::new()) {
                 Err(msg) => println!("Encountered error: {}", msg),
                 Ok(mgr) => {
-                    println!("Identified project as {}", mgr.language_name());
-                    println!("Bumping package one {} version...", args.amount);
+                    println!("✅ Identified project as {}", mgr.language_name());
+                    println!("✅ Bumping package one {} version", args.amount);
 
                     // perform the appropriate bump depending on the version
                     match args.amount {
