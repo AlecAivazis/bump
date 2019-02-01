@@ -4,7 +4,7 @@ use structopt::StructOpt;
 extern crate clap;
 // local module definition
 mod identify;
-mod javascript;
+mod node;
 
 pub trait PackageManager {
     fn language_name(&self) -> String;

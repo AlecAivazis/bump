@@ -1,10 +1,9 @@
-// locals
-
+// node::PackageManager knows how to bump node packages
 pub struct PackageManager;
 
 impl super::PackageManager for &PackageManager {
     fn language_name(&self) -> String {
-        "JavaScript".to_string()
+        "Node".to_string()
     }
     fn major(&self) {}
     fn minor(&self) {}
