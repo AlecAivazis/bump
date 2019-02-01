@@ -7,14 +7,8 @@ use std::env;
 mod go;
 mod identify;
 mod node;
-
-pub trait PackageManager {
-    fn language_name(&self) -> String;
-    fn major(&self);
-    fn minor(&self);
-    fn patch(&self);
-    fn pre(&self);
-}
+mod repo;
+mod version;
 
 fn main() {
     // grab the arguments from the command line

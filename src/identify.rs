@@ -4,13 +4,14 @@ use std::path;
 // locals
 use super::go;
 use super::node;
+use super::version;
 
 // identify_project should take in a directory path and a file system to use and figure
 // out which package manage we want to use
 pub fn identify_project(
     cwd: path::PathBuf,
     fs: impl filesystem::FileSystem,
-) -> Result<&'static super::PackageManager, &'static str> {
+) -> Result<&'static version::PackageManager, &'static str> {
     // if there is a node package manifest
     if fs.read_file(cwd.join("package.json")).is_ok() {
         return Ok(&node::PackageManager {});
