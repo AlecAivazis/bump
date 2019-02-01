@@ -5,3 +5,5 @@ authors = ["Alec Aivazis <alec@aivazis.com>"]
 edition = "2018"
 
 [dependencies]
+clap = "*"
+structopt = "0.2"
