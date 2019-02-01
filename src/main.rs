@@ -14,22 +14,6 @@ pub trait PackageManager {
     fn pre(&self);
 }
 
-clap::arg_enum! {
-    #[derive(Debug)]
-    enum BumpAmount {
-        Major,
-        Minor,
-        Patch,
-        Pre,
-    }
-}
-
-#[derive(Debug, StructOpt)]
-struct BumpCli {
-    /// can be one of "major", "minor", "patch"
-    amount: BumpAmount,
-}
-
 fn main() {
     // grab the arguments from the command line
     let args = BumpCli::from_args();
@@ -50,4 +34,20 @@ fn main() {
             };
         }
     };
+}
+
+#[derive(Debug, StructOpt)]
+struct BumpCli {
+    /// can be one of "major", "minor", "patch"
+    amount: BumpAmount,
+}
+
+clap::arg_enum! {
+    #[derive(Debug)]
+    enum BumpAmount {
+        Major,
+        Minor,
+        Patch,
+        Pre,
+    }
 }
