@@ -12,19 +12,13 @@ pub fn identify_project(
     fs: impl filesystem::FileSystem,
 ) -> Result<&'static super::PackageManager, &'static str> {
     // if there is a node package manifest
-    match fs.read_file(cwd.join("package.json")) {
-        Err(_) => (),
-        Ok(_) => {
-            return Ok(&node::PackageManager {});
-        }
+    if fs.read_file(cwd.join("package.json")).is_ok() {
+        return Ok(&node::PackageManager {});
     }
 
     // if there is a go module file
-    match fs.read_file(cwd.join("go.mod")) {
-        Err(_) => (),
-        Ok(_) => {
-            return Ok(&go::PackageManager {});
-        }
+    if fs.read_file(cwd.join("go.mod")).is_ok() {
+        return Ok(&go::PackageManager {});
     }
 
     return Err("Could not identify project");

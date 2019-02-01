@@ -7,5 +7,4 @@ LABEL "com.github.actions.color"="Red"
 
 LABEL "maintainer"="AlecAivazis <alec@aivazis.com>"
 
-ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["cargo"]
