@@ -13,13 +13,13 @@ workflow "Deploy Binary" {
   resolves = ["Build Binary"]
 }
 
-action "Filters for GitHub Actions" {
+action "Master Filter" {
   uses = "actions/bin/filter@c6471707d308175c57dfe91963406ef205837dbd"
   args = "branch master"
 }
 
 action "Build Binary" {
   uses = "./.github/actions/cargo"
-  needs = ["Filters for GitHub Actions"]
   args = "build"
+  needs = ["Master Filter"]
 }
