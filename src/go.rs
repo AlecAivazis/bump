@@ -1,7 +1,7 @@
 // locals
 use super::project;
 
-// go::project knows how to bump go packages
+// go::PackageManager knows how to bump go packages
 pub struct PackageManager;
 
 impl project::PackageManager for PackageManager {

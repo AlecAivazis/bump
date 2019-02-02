@@ -1,7 +1,7 @@
 // locals
 use crate::project;
 
-// cargo::Project knows how to bump cargo packages
+// cargo::PackageManager knows how to bump cargo packages
 pub struct PackageManager;
 
 impl project::PackageManager for PackageManager {
