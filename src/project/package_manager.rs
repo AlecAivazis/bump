@@ -10,9 +10,32 @@ use crate::node;
 pub trait PackageManager {
     // these need to be implemented by each language
     fn language_name(&self) -> &'static str;
-    fn major(&self, version: &semver::Version) -> Result<(), String>;
-    fn minor(&self, version: &semver::Version) -> Result<(), String>;
-    fn patch(&self, version: &semver::Version) -> Result<(), String>;
+    fn major(&self, repo: &git2::Repository, version: &semver::Version) -> Result<(), String>;
+    fn minor(&self, repo: &git2::Repository, version: &semver::Version) -> Result<(), String>;
+    fn patch(&self, repo: &git2::Repository, version: &semver::Version) -> Result<(), String>;
+
+    fn create_tag(&self, repo: &git2::Repository, tag_name: String) -> Result<(), String> {
+        // grab the current commit
+        let head = match repo.head() {
+            Ok(reference) => reference,
+            Err(msg) => return Err(msg.to_string()),
+        };
+        let head_obj = repo
+            .find_object(head.target().unwrap(), Some(git2::ObjectType::Commit))
+            .unwrap();
+
+        // create a tag in the repo
+        match repo.tag_lightweight(&tag_name, &head_obj, false) {
+            Ok(_) => (),
+            Err(msg) => return Err(msg.to_string()),
+        };
+
+        // notify the user
+        println!("✅  Created tag {}", tag_name);
+
+        // grab the head
+        Ok(())
+    }
 }
 
 pub fn identify_dir<'a>(
