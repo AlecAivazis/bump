@@ -100,7 +100,6 @@ impl Project<'_> {
                             } else {
                                 tag
                             };
-                            println!("found tag named {}", name);
 
                             match Version::parse(name) {
                                 // the tag is valid semver

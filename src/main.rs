@@ -34,8 +34,6 @@ fn main() {
         BumpAmount::Minor => current_project.bump_minor(),
         BumpAmount::Patch => current_project.bump_patch(),
     };
-
-    println!("✅  Cutting tag {}", next_version.unwrap());
 }
 
 #[derive(Debug, StructOpt)]
