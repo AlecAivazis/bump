@@ -138,16 +138,14 @@ pub fn find<'a>(fs: impl filesystem::FileSystem) -> Result<Project<'a>, &'static
         Ok(d) => d,
     };
 
-    // grab the appropriate manager
-    let manager = match identify_dir(&fs, &dir) {
-        Err(msg) => return Err(msg),
-        Ok(mgr) => mgr,
-    };
     // and the repository associated with it
     let repo = match Repository::open(&dir) {
         Err(_) => return Err("Directory was not a git repo??"),
         Ok(r) => r,
     };
+
+    // grab the appropriate manager
+    let manager = identify_dir(&fs, &dir);
 
     // return a new instance of the project
     Ok(Project {

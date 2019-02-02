@@ -4,6 +4,7 @@ use structopt::StructOpt;
 extern crate clap;
 // local module definition
 mod cargo;
+mod empty;
 mod go;
 mod node;
 mod project;
@@ -34,7 +35,7 @@ fn main() {
         BumpAmount::Patch => current_project.bump_patch(),
     };
 
-    println!("✅  New version: {}", next_version.unwrap());
+    println!("✅  Cutting tag {}", next_version.unwrap());
 }
 
 #[derive(Debug, StructOpt)]

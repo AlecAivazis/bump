@@ -2,6 +2,7 @@
 use std::path;
 // local imports
 use crate::cargo;
+use crate::empty;
 use crate::go;
 use crate::node;
 
@@ -41,21 +42,21 @@ pub trait PackageManager {
 pub fn identify_dir<'a>(
     fs: &impl filesystem::FileSystem,
     dir: &path::PathBuf,
-) -> Result<&'a PackageManager, &'static str> {
+) -> &'a PackageManager {
     // if there is a node package manifest
     if fs.read_file(dir.join("package.json")).is_ok() {
-        return Ok(&node::PackageManager {});
+        return &node::PackageManager {};
     }
 
     // if there is a go module file
     if fs.read_file(dir.join("go.mod")).is_ok() {
-        return Ok(&go::PackageManager {});
+        return &go::PackageManager {};
     }
 
     // cargo file
     if fs.read_file(dir.join("cargo.toml")).is_ok() {
-        return Ok(&cargo::PackageManager {});
+        return &cargo::PackageManager {};
     }
 
-    return Err("Could not identify project");
+    return &empty::PackageManager {};
 }
