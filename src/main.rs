@@ -2,14 +2,12 @@
 use structopt::StructOpt;
 #[macro_use]
 extern crate clap;
-#[macro_use]
 use std::env;
 // local module definition
 mod cargo;
 mod go;
 mod identify;
 mod node;
-mod repo;
 mod version;
 
 fn main() {
@@ -23,8 +21,14 @@ fn main() {
             match identify::identify_project(cwd, filesystem::OsFileSystem::new()) {
                 Err(msg) => println!("Encountered error: {}", msg),
                 Ok(mgr) => {
-                    println!("✅  Identified project as {}", mgr.language_name());
-                    println!("✅  Bumping package up a {} version", args.amount);
+                    println!(
+                        "✅  Identified {} project",
+                        mgr.language_name().to_lowercase()
+                    );
+                    println!(
+                        "✅  Bumping package up a {} version",
+                        args.amount.to_string().to_lowercase()
+                    );
 
                     // perform the appropriate bump depending on the version
                     match args.amount {
