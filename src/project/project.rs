@@ -8,6 +8,7 @@ use super::package_manager::{identify_dir, PackageManager};
 
 pub struct Project<'a> {
     directory: path::PathBuf,
+    repository: git2::Repository,
     package_manager: &'a PackageManager,
 }
 
@@ -26,7 +27,7 @@ impl Project<'_> {
 
         // increment it by one major version
         next_version.increment_major();
-        match self.package_manager.major(&next_version) {
+        match self.package_manager.major(&self.repository, &next_version) {
             Ok(_) => (),
             Err(msg) => return Err(msg),
         };
@@ -41,7 +42,7 @@ impl Project<'_> {
 
         // increment it by one minor version
         next_version.increment_minor();
-        match self.package_manager.minor(&next_version) {
+        match self.package_manager.minor(&self.repository, &next_version) {
             Ok(_) => (),
             Err(msg) => return Err(msg),
         };
@@ -56,7 +57,7 @@ impl Project<'_> {
 
         // increment it by one patch version
         next_version.increment_patch();
-        match self.package_manager.patch(&next_version) {
+        match self.package_manager.patch(&self.repository, &next_version) {
             Ok(_) => (),
             Err(msg) => return Err(msg),
         };
@@ -93,16 +94,25 @@ impl Project<'_> {
                 .fold(Vec::new(), |mut acc, tag_name| {
                     match tag_name {
                         // if we have a valid tag parse it as semver
-                        Some(tag) => match Version::parse(tag) {
-                            // the tag is valid semver
-                            Ok(version) => {
-                                // add the parsed version to the list
-                                acc.push(version);
-                                acc
+                        Some(tag) => {
+                            let name = if tag.to_string().chars().nth(0).unwrap() == 'v' {
+                                &tag[1..]
+                            } else {
+                                tag
+                            };
+                            println!("found tag named {}", name);
+
+                            match Version::parse(name) {
+                                // the tag is valid semver
+                                Ok(version) => {
+                                    // add the parsed version to the list
+                                    acc.push(version);
+                                    acc
+                                }
+                                // if its not a valid semver tag then don't include it
+                                Err(_) => acc,
                             }
-                            // if its not a valid semver tag then don't include it
-                            Err(_) => acc,
-                        },
+                        }
                         // if the tag is not utf-8 then dont include it
                         None => acc,
                     }
@@ -111,7 +121,6 @@ impl Project<'_> {
             ordered_tags.sort_by(|a, b| b.cmp(a));
 
             // the first entry in the ordered list of tags is the current semantic version
-            // return Ok(ordered_tags.get(0).clone().unwrap());
             return match ordered_tags.get(0) {
                 Some(tag) => Ok(tag.clone()),
                 None => Err("hello"),
@@ -134,9 +143,15 @@ pub fn find<'a>(fs: impl filesystem::FileSystem) -> Result<Project<'a>, &'static
         Err(msg) => return Err(msg),
         Ok(mgr) => mgr,
     };
+    // and the repository associated with it
+    let repo = match Repository::open(&dir) {
+        Err(_) => return Err("Directory was not a git repo??"),
+        Ok(r) => r,
+    };
 
     // return a new instance of the project
     Ok(Project {
+        repository: repo,
         directory: dir,
         package_manager: manager,
     })

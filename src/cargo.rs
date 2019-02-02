@@ -1,3 +1,5 @@
+// externals
+use git2;
 // locals
 use crate::project;
 
@@ -8,15 +10,13 @@ impl project::PackageManager for PackageManager {
     fn language_name(&self) -> &'static str {
         "cargo"
     }
-    fn major(&self, version: &semver::Version) -> Result<(), String> {
-        println!("{}", version);
-
-        Ok(())
+    fn major(&self, _repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
+        Err(String::from("Cargo is not yet supported."))
     }
-    fn minor(&self, _version: &semver::Version) -> Result<(), String> {
-        Ok(())
+    fn minor(&self, _repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
+        Err(String::from("Cargo is not yet supported."))
     }
-    fn patch(&self, _version: &semver::Version) -> Result<(), String> {
-        Ok(())
+    fn patch(&self, _repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
+        Err(String::from("Cargo is not yet supported."))
     }
 }

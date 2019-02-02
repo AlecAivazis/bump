@@ -1,4 +1,5 @@
 // externals
+use git2;
 use std::process::Command;
 use std::str;
 // locals
@@ -21,15 +22,15 @@ impl project::PackageManager for PackageManager {
         "node"
     }
 
-    fn major(&self, _version: &semver::Version) -> Result<(), String> {
+    fn major(&self, _repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
         self.bump_version("major")
     }
 
-    fn minor(&self, _version: &semver::Version) -> Result<(), String> {
+    fn minor(&self, _repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
         self.bump_version("minor")
     }
 
-    fn patch(&self, _version: &semver::Version) -> Result<(), String> {
+    fn patch(&self, _repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
         self.bump_version("patch")
     }
 }
