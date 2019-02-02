@@ -1,38 +1,5 @@
-// externals
-use filesystem;
-use std::path;
-// locals
-use super::cargo;
-use super::go;
-use super::node;
-use super::version;
-
-// identify_project should take in a directory path and a file system to use and figure
-// out which package manage we want to use
-pub fn identify_project(
-    cwd: path::PathBuf,
-    fs: impl filesystem::FileSystem,
-) -> Result<&'static version::PackageManager, &'static str> {
-    // if there is a node package manifest
-    if fs.read_file(cwd.join("package.json")).is_ok() {
-        return Ok(&node::PackageManager {});
-    }
-
-    // if there is a go module file
-    if fs.read_file(cwd.join("go.mod")).is_ok() {
-        return Ok(&go::PackageManager {});
-    }
-
-    // cargo file
-    if fs.read_file(cwd.join("cargo.toml")).is_ok() {
-        return Ok(&cargo::PackageManager {});
-    }
-
-    return Err("Could not identify project");
-}
-
 #[cfg(test)]
-mod tests {
+mod project_tests {
     use filesystem::FileSystem;
     use std::path;
 
@@ -55,7 +22,7 @@ mod tests {
         }
 
         // identify the project
-        match crate::identify::identify_project(path::PathBuf::from(cwd), mem_fs) {
+        match crate::project::identify_project(path::PathBuf::from(cwd), mem_fs) {
             Ok(mgr) => assert_eq!("Node", mgr.language_name()),
             _ => panic!("Could not idenfity node package"),
         }
@@ -80,9 +47,24 @@ mod tests {
         }
 
         // identify the project
-        match crate::identify::identify_project(path::PathBuf::from(r"home"), mem_fs) {
+        match crate::project::identify_project(path::PathBuf::from(r"home"), mem_fs) {
             Ok(mgr) => assert_eq!("Go", mgr.language_name()),
             _ => panic!("Could not idenfity go package"),
         }
+    }
+
+    #[test]
+    fn find_repoAbove() {
+        // create an in memory filesystem we will test again
+        let mem_fs = filesystem::FakeFileSystem::new();
+        // add a .git directory (the indicator of a git repo) to a known location
+        mem_fs.create_dir("/.git");
+    }
+
+    #[test]
+    fn find_currentRepo() {
+        // create an in memory filesystem we will test again
+        let mem_fs = filesystem::FakeFileSystem::new();
+        // set the current working
     }
 }

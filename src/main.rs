@@ -6,41 +6,36 @@ use std::env;
 // local module definition
 mod cargo;
 mod go;
-mod identify;
 mod node;
-mod version;
+mod project;
 
 fn main() {
     // grab the arguments from the command line
     let args = BumpCli::from_args();
 
-    match env::current_dir() {
-        Err(_) => panic!("Could not find current working dir"),
-        Ok(cwd) => {
-            // grab package manager for the current project
-            match identify::identify_project(cwd, filesystem::OsFileSystem::new()) {
-                Err(msg) => println!("Encountered error: {}", msg),
-                Ok(mgr) => {
-                    println!(
-                        "✅  Identified {} project",
-                        mgr.language_name().to_lowercase()
-                    );
-                    println!(
-                        "✅  Bumping package up a {} version",
-                        args.amount.to_string().to_lowercase()
-                    );
+    // find the current repository
+    let current_project = match project::find(filesystem::OsFileSystem::new()) {
+        Err(msg) => panic!(msg),
+        Ok(r) => r,
+    };
 
-                    // perform the appropriate bump depending on the version
-                    match args.amount {
-                        BumpAmount::Major => mgr.major(),
-                        BumpAmount::Minor => mgr.minor(),
-                        BumpAmount::Patch => mgr.patch(),
-                        BumpAmount::Pre => mgr.pre(),
-                    };
-                }
-            };
-        }
-    }
+    println!(
+        "✅  Identified {} project",
+        current_project.language_name().to_lowercase()
+    );
+    println!(
+        "✅  Bumping package up a {} version",
+        args.amount.to_string().to_lowercase()
+    );
+
+    // perform the appropriate bump depending on the version
+    let next_version = match args.amount {
+        BumpAmount::Major => current_project.bump_major(),
+        BumpAmount::Minor => current_project.bump_minor(),
+        BumpAmount::Patch => current_project.bump_patch(),
+    };
+
+    println!("✅  New version: {}", next_version);
 }
 
 #[derive(Debug, StructOpt)]
@@ -55,6 +50,5 @@ clap::arg_enum! {
         Major,
         Minor,
         Patch,
-        Pre,
     }
 }

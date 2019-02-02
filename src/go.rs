@@ -1,15 +1,14 @@
 // locals
-use super::version;
+use super::project;
 
-// go::PackageManager knows how to bump go packages
+// go::project knows how to bump go packages
 pub struct PackageManager;
 
-impl version::PackageManager for PackageManager {
-    fn language_name(&self) -> String {
-        String::from("go")
+impl project::PackageManager for PackageManager {
+    fn language_name(&self) -> &'static str {
+        "go"
     }
-    fn major(&self) {}
-    fn minor(&self) {}
-    fn patch(&self) {}
-    fn pre(&self) {}
+    fn major(&self, _version: &semver::Version) {}
+    fn minor(&self, _version: &semver::Version) {}
+    fn patch(&self, _version: &semver::Version) {}
 }
