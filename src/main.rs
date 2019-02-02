@@ -34,6 +34,11 @@ fn main() {
         BumpAmount::Minor => current_project.bump_minor(),
         BumpAmount::Patch => current_project.bump_patch(),
     };
+
+    match next_version {
+        Ok(_) => (),
+        Err(msg) => panic!(msg),
+    };
 }
 
 #[derive(Debug, StructOpt)]

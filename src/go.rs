@@ -11,7 +11,7 @@ impl project::PackageManager for PackageManager {
         "go"
     }
 
-    fn major(&self, repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
+    fn major(&self, _repo: &git2::Repository, _version: &semver::Version) -> Result<(), String> {
         Err(String::from("Major bumps are not yet supported in go."))
     }
 
