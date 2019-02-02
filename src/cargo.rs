@@ -1,14 +1,16 @@
 // locals
-use super::project;
+use crate::project;
 
-// go::PackageManager knows how to bump go packages
+// cargo::PackageManager knows how to bump cargo packages
 pub struct PackageManager;
 
 impl project::PackageManager for PackageManager {
     fn language_name(&self) -> &'static str {
-        "go"
+        "cargo"
     }
-    fn major(&self, _version: &semver::Version) -> Result<(), String> {
+    fn major(&self, version: &semver::Version) -> Result<(), String> {
+        println!("{}", version);
+
         Ok(())
     }
     fn minor(&self, _version: &semver::Version) -> Result<(), String> {
