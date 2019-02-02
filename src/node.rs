@@ -1,4 +1,5 @@
 // externals
+use std::error::Error;
 use std::process::Command;
 use std::str;
 // locals
@@ -7,12 +8,12 @@ use super::project;
 pub struct PackageManager;
 
 impl PackageManager {
-    fn bump_version(&self, which: &str) {
+    fn bump_version(&self, which: &str) -> Result<(), String> {
         // execute the command
         match Command::new("npm").args(&["version", which]).output() {
-            Ok(_) => (),
-            Err(res) => println!("Something went wrong: {}", res),
-        };
+            Ok(_) => Ok(()),
+            Err(res) => Err(res.to_string()),
+        }
     }
 }
 
@@ -21,15 +22,15 @@ impl project::PackageManager for PackageManager {
         "node"
     }
 
-    fn major(&self, _version: &semver::Version) {
+    fn major(&self, _version: &semver::Version) -> Result<(), String> {
         self.bump_version("major")
     }
 
-    fn minor(&self, _version: &semver::Version) {
+    fn minor(&self, _version: &semver::Version) -> Result<(), String> {
         self.bump_version("minor")
     }
 
-    fn patch(&self, _version: &semver::Version) {
+    fn patch(&self, _version: &semver::Version) -> Result<(), String> {
         self.bump_version("patch")
     }
 }

@@ -35,7 +35,7 @@ fn main() {
         BumpAmount::Patch => current_project.bump_patch(),
     };
 
-    println!("✅  New version: {}", next_version);
+    println!("✅  New version: {}", next_version.unwrap());
 }
 
 #[derive(Debug, StructOpt)]

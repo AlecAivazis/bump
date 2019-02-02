@@ -11,9 +11,9 @@ use crate::node;
 pub trait PackageManager {
     // these need to be implemented by each language
     fn language_name(&self) -> &'static str;
-    fn major(&self, version: &semver::Version);
-    fn minor(&self, version: &semver::Version);
-    fn patch(&self, version: &semver::Version);
+    fn major(&self, version: &semver::Version) -> Result<(), String>;
+    fn minor(&self, version: &semver::Version) -> Result<(), String>;
+    fn patch(&self, version: &semver::Version) -> Result<(), String>;
 }
 
 pub fn identify_dir<'a>(

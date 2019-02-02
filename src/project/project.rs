@@ -20,40 +20,49 @@ impl Project<'_> {
         self.package_manager.language_name()
     }
 
-    pub fn bump_major(&self) -> semver::Version {
+    pub fn bump_major(&self) -> Result<semver::Version, String> {
         // get the current version
         let mut next_version = self.current_version().unwrap();
 
         // increment it by one major version
         next_version.increment_major();
-        self.package_manager.major(&next_version);
+        match self.package_manager.major(&next_version) {
+            Ok(_) => (),
+            Err(msg) => return Err(msg),
+        };
 
         // return it to the caller
-        return next_version;
+        return Ok(next_version);
     }
 
-    pub fn bump_minor(&self) -> semver::Version {
+    pub fn bump_minor(&self) -> Result<semver::Version, String> {
         // get the current version
         let mut next_version = self.current_version().unwrap();
 
-        // increment it by one major version
+        // increment it by one minor version
         next_version.increment_minor();
-        self.package_manager.minor(&next_version);
+        match self.package_manager.minor(&next_version) {
+            Ok(_) => (),
+            Err(msg) => return Err(msg),
+        };
 
         // return it to the caller
-        return next_version;
+        return Ok(next_version);
     }
 
-    pub fn bump_patch(&self) -> semver::Version {
+    pub fn bump_patch(&self) -> Result<semver::Version, String> {
         // get the current version
         let mut next_version = self.current_version().unwrap();
 
-        // increment it by one major version
+        // increment it by one patch version
         next_version.increment_patch();
-        self.package_manager.patch(&next_version);
+        match self.package_manager.patch(&next_version) {
+            Ok(_) => (),
+            Err(msg) => return Err(msg),
+        };
 
         // return it to the caller
-        return next_version;
+        return Ok(next_version);
     }
 
     fn current_version(&self) -> Result<semver::Version, &'static str> {
