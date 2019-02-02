@@ -6,9 +6,14 @@ pub struct PackageManager;
 
 impl version::PackageManager for PackageManager {
     fn language_name(&self) -> String {
-        String::from("Go")
+        String::from("Rust")
     }
-    fn major(&self) {}
+    fn major(&self) {
+        // compute the next major version
+        let nextVersion = self.next_major();
+
+        println!("{}", nextVersion)
+    }
     fn minor(&self) {}
     fn patch(&self) {}
     fn pre(&self) {}

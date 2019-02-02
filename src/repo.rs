@@ -1,3 +1,3 @@
-fn next_version(bumpAmount: super::BumpAmount) -> String {
-    "".to_string()
+fn next_version(bump_amount: super::BumpAmount) -> String {
+    String::from("")
 }

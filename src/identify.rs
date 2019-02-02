@@ -2,6 +2,7 @@
 use filesystem;
 use std::path;
 // locals
+use super::cargo;
 use super::go;
 use super::node;
 use super::version;
@@ -20,6 +21,11 @@ pub fn identify_project(
     // if there is a go module file
     if fs.read_file(cwd.join("go.mod")).is_ok() {
         return Ok(&go::PackageManager {});
+    }
+
+    // cargo file
+    if fs.read_file(cwd.join("cargo.toml")).is_ok() {
+        return Ok(&cargo::PackageManager {});
     }
 
     return Err("Could not identify project");

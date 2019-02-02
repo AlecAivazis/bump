@@ -6,7 +6,7 @@ pub struct PackageManager;
 
 impl version::PackageManager for PackageManager {
     fn language_name(&self) -> String {
-        "Node".to_string()
+        String::from("Node")
     }
     fn major(&self) {
         //
