@@ -120,13 +120,6 @@ impl Project<'_> {
     }
 }
 
-pub fn new(fs: impl filesystem::FileSystem, dir: path::PathBuf, mgr: &PackageManager) -> Project {
-    return Project {
-        directory: dir,
-        package_manager: mgr,
-    };
-}
-
 // getters
 
 pub fn find<'a>(fs: impl filesystem::FileSystem) -> Result<Project<'a>, &'static str> {
@@ -143,7 +136,10 @@ pub fn find<'a>(fs: impl filesystem::FileSystem) -> Result<Project<'a>, &'static
     };
 
     // return a new instance of the project
-    Ok(new(fs, dir, manager))
+    Ok(Project {
+        directory: dir,
+        package_manager: manager,
+    })
 }
 
 fn find_dir(fs: &impl filesystem::FileSystem) -> Result<path::PathBuf, &'static str> {

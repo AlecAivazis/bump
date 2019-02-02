@@ -2,7 +2,6 @@
 use structopt::StructOpt;
 #[macro_use]
 extern crate clap;
-use std::env;
 // local module definition
 mod cargo;
 mod go;

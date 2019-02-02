@@ -1,5 +1,4 @@
 // externals
-use std::error::Error;
 use std::process::Command;
 use std::str;
 // locals

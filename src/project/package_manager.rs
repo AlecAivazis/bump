@@ -1,5 +1,4 @@
 // external imports
-use semver::Version;
 use std::path;
 // local imports
 use crate::cargo;
